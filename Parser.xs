@@ -2,29 +2,43 @@
 #include "perl.h"
 #include "XSUB.h"
 
-#include "hook_parser.h"
+#define NEED_PL_parser
+#include "ppport.h"
 
-#ifdef PL_parser
-#define PL_linestr (PL_parser->linestr)
-#define PL_bufptr  (PL_parser->bufptr)
-#define PL_bufend  (PL_parser->bufend)
-#endif
+#include "hook_parser.h"
 
 const char *
 hook_parser_get_linestr (pTHX) {
-	return SvPVX (PL_linestr);
+	if (!PL_parser) {
+		return NULL;
+	}
+
+	return SvPVX_const (PL_linestr);
 }
 
-UV
+IV
 hook_parser_get_linestr_offset (pTHX) {
-	char *linestr = SvPVX (PL_linestr);
+	char *linestr;
+
+	if (!PL_parser) {
+		return -1;
+	}
+
+	linestr = SvPVX (PL_linestr);
 	return PL_bufptr - linestr;
 }
 
 void
 hook_parser_set_linestr (pTHX_ const char *new_value) {
-	int new_len = strlen (new_value);
-	char *old_linestr = SvPVX (PL_linestr);
+	int new_len;
+	char *old_linestr;
+
+	if (!PL_parser) {
+        croak ("trying to alter PL_linestr at runtime");
+	}
+
+	new_len = strlen (new_value);
+	old_linestr = SvPVX (PL_linestr);
 
 	SvGROW (PL_linestr, new_len);
 
@@ -46,7 +60,7 @@ hook_parser_get_linestr ()
 	C_ARGS:
 		aTHX
 
-UV
+IV
 hook_parser_get_linestr_offset ()
 	C_ARGS:
 		aTHX
