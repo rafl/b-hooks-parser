@@ -57,6 +57,8 @@ hook_parser_set_linestr (pTHX_ const char *new_value) {
 
 MODULE = B::Hooks::Parser  PACKAGE = B::Hooks::Parser  PREFIX = hook_parser_
 
+PROTOTYPES: DISABLE
+
 const char *
 hook_parser_get_linestr ()
 	C_ARGS:
