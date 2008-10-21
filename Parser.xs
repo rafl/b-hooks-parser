@@ -7,9 +7,11 @@
 
 #include "hook_parser.h"
 
+#define NOT_PARSING (!PL_parser || !PL_bufptr)
+
 const char *
 hook_parser_get_linestr (pTHX) {
-	if (!PL_parser) {
+	if (NOT_PARSING) {
 		return NULL;
 	}
 
@@ -20,7 +22,7 @@ IV
 hook_parser_get_linestr_offset (pTHX) {
 	char *linestr;
 
-	if (!PL_parser) {
+	if (NOT_PARSING) {
 		return -1;
 	}
 
@@ -33,7 +35,7 @@ hook_parser_set_linestr (pTHX_ const char *new_value) {
 	int new_len;
 	char *old_linestr;
 
-	if (!PL_parser) {
+	if (NOT_PARSING) {
         croak ("trying to alter PL_linestr at runtime");
 	}
 
