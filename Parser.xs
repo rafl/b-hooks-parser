@@ -55,9 +55,24 @@ hook_parser_set_linestr (pTHX_ const char *new_value) {
 	PL_bufend = SvPVX(PL_linestr) + new_len;
 }
 
+STATIC I32
+grow_linestr (pTHX_ int idx, SV *sv, int maxlen) {
+	const I32 count = FILTER_READ (idx + 1, sv, maxlen);
+	SvGROW (sv, 8192);
+	return count;
+}
+
+void
+hook_parser_setup () {
+	filter_add (grow_linestr, NULL);
+}
+
 MODULE = B::Hooks::Parser  PACKAGE = B::Hooks::Parser  PREFIX = hook_parser_
 
 PROTOTYPES: DISABLE
+
+void
+hook_parser_setup ()
 
 const char *
 hook_parser_get_linestr ()
