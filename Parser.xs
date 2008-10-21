@@ -59,6 +59,7 @@ STATIC I32
 grow_linestr (pTHX_ int idx, SV *sv, int maxlen) {
 	const I32 count = FILTER_READ (idx + 1, sv, maxlen);
 	SvGROW (sv, 8192);
+	filter_del (grow_linestr);
 	return count;
 }
 
