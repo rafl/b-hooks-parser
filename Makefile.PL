@@ -24,4 +24,6 @@ makemaker_args(
     dist => { preop => 'pod2text lib/B/Hooks/Parser.pm > README' },
 );
 
+extra_tests;
+
 WriteAll;
