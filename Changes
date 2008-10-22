@@ -1,2 +1,5 @@
+0.02  Wed, 22 Oct 2008 21:18:14 +0200
+  * Don't segfault if PL_linestr needs relocation in set_linestr.
+
 0.01  Tue, 21 Oct 2008 15:03:59 +0200
   * Initial release.
