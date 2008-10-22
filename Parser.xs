@@ -66,6 +66,40 @@ hook_parser_setup () {
 	filter_add (grow_linestr, NULL);
 }
 
+const char *
+hook_lexer_get_lex_stuff (pTHX) {
+	if (NOT_PARSING || !PL_lex_stuff) {
+		return NULL;
+	}
+
+	return SvPVX_const (PL_lex_stuff);
+}
+
+void
+hook_lexer_clear_lex_stuff (pTHX) {
+	if (!NOT_PARSING) {
+		return;
+	}
+
+	PL_lex_stuff = (SV *)NULL;
+}
+
+char *
+hook_lexer_move_past_token (pTHX_ char *s) {
+	STRLEN tokenbuf_len;
+
+	while (s < PL_bufend && isSPACE (*s)) {
+		s++;
+	}
+
+	tokenbuf_len = strlen (PL_tokenbuf);
+	if (memEQ (s, PL_tokenbuf, tokenbuf_len)) {
+		s += tokenbuf_len;
+	}
+
+	return s;
+}
+
 MODULE = B::Hooks::Parser  PACKAGE = B::Hooks::Parser  PREFIX = hook_parser_
 
 PROTOTYPES: DISABLE
@@ -88,3 +122,27 @@ hook_parser_set_linestr (new_value)
 		const char *new_value
 	C_ARGS:
 		aTHX_ new_value
+
+MODULE = B::Hooks::Parser  PACKAGE = B::Hooks::Lexer  PREFIX = hook_lexer_
+
+const char *
+hook_lexer_get_lex_stuff ()
+	C_ARGS:
+		aTHX
+
+void
+hook_lexer_clear_lex_stuff ()
+	C_ARGS:
+		aTHX
+
+int
+hook_lexer_move_past_token (offset)
+		int offset
+	PREINIT:
+		char *base_s, *s;
+	CODE:
+		base_s = SvPVX (PL_linestr) + offset;
+		s = hook_lexer_move_past_token (aTHX_ base_s);
+		RETVAL = s - base_s;
+	OUTPUT:
+		RETVAL
