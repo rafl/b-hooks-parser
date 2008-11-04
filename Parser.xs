@@ -6,6 +6,7 @@
 #include "ppport.h"
 
 #include "hook_parser.h"
+#include "stolen_chunk_of_toke.c"
 
 #define NOT_PARSING (!PL_parser || !PL_bufptr)
 

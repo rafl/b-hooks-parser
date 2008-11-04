@@ -13,7 +13,6 @@ configure_requires 'ExtUtils::Depends';
 
 my $pkg = ExtUtils::Depends->new('B::Hooks::Parser');
 $pkg->install('hook_parser.h');
-$pkg->add_c('stolen_chunk_of_toke.c');
 $pkg->add_xs('Parser.xs');
 $pkg->add_pm('lib/B/Hooks/Parser.pm' => '$(INST_LIB)/B/Hooks/Parser.pm');
 
