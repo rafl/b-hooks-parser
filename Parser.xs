@@ -77,7 +77,7 @@ hook_parser_get_lex_stuff (pTHX) {
 
 void
 hook_parser_clear_lex_stuff (pTHX) {
-	if (!NOT_PARSING) {
+	if (NOT_PARSING) {
 		return;
 	}
 
