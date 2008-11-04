@@ -10,13 +10,13 @@
 
 #define NOT_PARSING (!PL_parser || !PL_bufptr)
 
-const char *
+char *
 hook_parser_get_linestr (pTHX) {
 	if (NOT_PARSING) {
 		return NULL;
 	}
 
-	return SvPVX_const (PL_linestr);
+	return SvPVX (PL_linestr);
 }
 
 IV
@@ -66,17 +66,17 @@ hook_parser_setup () {
 	filter_add (grow_linestr, NULL);
 }
 
-const char *
-hook_lexer_get_lex_stuff (pTHX) {
+char *
+hook_parser_get_lex_stuff (pTHX) {
 	if (NOT_PARSING || !PL_lex_stuff) {
 		return NULL;
 	}
 
-	return SvPVX_const (PL_lex_stuff);
+	return SvPVX (PL_lex_stuff);
 }
 
 void
-hook_lexer_clear_lex_stuff (pTHX) {
+hook_parser_clear_lex_stuff (pTHX) {
 	if (!NOT_PARSING) {
 		return;
 	}
@@ -85,7 +85,7 @@ hook_lexer_clear_lex_stuff (pTHX) {
 }
 
 char *
-hook_lexer_move_past_token (pTHX_ char *s) {
+hook_toke_move_past_token (pTHX_ char *s) {
 	STRLEN tokenbuf_len;
 
 	while (s < PL_bufend && isSPACE (*s)) {
@@ -98,6 +98,22 @@ hook_lexer_move_past_token (pTHX_ char *s) {
 	}
 
 	return s;
+}
+
+char *
+hook_toke_scan_word (pTHX_ int offset, int handle_package, char *dest, STRLEN destlen, STRLEN *res_len) {
+	char *base_s = SvPVX (PL_linestr) + offset;
+	return scan_word (base_s, dest, destlen, handle_package, res_len);
+}
+
+char *
+hook_toke_skipspace (pTHX_ char *s) {
+	return skipspace (s);
+}
+
+char *
+hook_toke_scan_str (pTHX_ char *s) {
+	return scan_str (s, 0, 0);
 }
 
 MODULE = B::Hooks::Parser  PACKAGE = B::Hooks::Parser  PREFIX = hook_parser_
@@ -123,26 +139,40 @@ hook_parser_set_linestr (new_value)
 	C_ARGS:
 		aTHX_ new_value
 
-MODULE = B::Hooks::Parser  PACKAGE = B::Hooks::Lexer  PREFIX = hook_lexer_
-
 const char *
-hook_lexer_get_lex_stuff ()
+hook_parser_get_lex_stuff ()
 	C_ARGS:
 		aTHX
 
 void
-hook_lexer_clear_lex_stuff ()
+hook_parser_clear_lex_stuff ()
 	C_ARGS:
 		aTHX
 
+MODULE = B::Hooks::Parser  PACKAGE = B::Hooks::Toke  PREFIX = hook_toke_
+
 int
-hook_lexer_move_past_token (offset)
+hook_toke_move_past_token (offset)
 		int offset
 	PREINIT:
 		char *base_s, *s;
 	CODE:
 		base_s = SvPVX (PL_linestr) + offset;
-		s = hook_lexer_move_past_token (aTHX_ base_s);
+		s = hook_toke_move_past_token (aTHX_ base_s);
 		RETVAL = s - base_s;
 	OUTPUT:
 		RETVAL
+
+void
+hook_toke_scan_word (offset, handle_package)
+		int offset
+		int handle_package
+	PREINIT:
+		char tmpbuf[sizeof (PL_tokenbuf)];
+		STRLEN retlen;
+	PPCODE:
+		(void)hook_toke_scan_word (aTHX_ offset, handle_package, tmpbuf, sizeof (PL_tokenbuf), &retlen);
+
+		EXTEND (SP, 2);
+		mPUSHp (tmpbuf, retlen);
+		mPUSHi (retlen);
