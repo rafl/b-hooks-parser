@@ -1,3 +1,6 @@
+0.04  Tue, 04 Nov 2008 21:59:31 +0100
+  * Fix bug in clear_lex_stuff, making it actually work.
+
 0.03  Tue, 04 Nov 2008 02:49:33 +0100
   * Bind various lexer functions. This is still experimental and not documented
     yet.
