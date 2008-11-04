@@ -1,7 +1,8 @@
 ^\.
 build\b
 blib\b
-\.(?:bak|o|c|bs)$
+Parser.c
+\.(?:bak|o|bs)$
 ^Makefile$
 ^Makefile.old$
 ^Debian
