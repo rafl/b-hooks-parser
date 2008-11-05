@@ -2,8 +2,9 @@
 #define __HOOK_PARSER_H__
 
 #include "perl.h"
+#include "hook_op_check.h"
 
-void hook_parser_setup (void);
+hook_op_check_id hook_parser_setup (void);
 char *hook_parser_get_linestr (pTHX);
 IV hook_parser_get_linestr_offset (pTHX);
 void hook_parser_set_linestr (pTHX_ const char *new_value);

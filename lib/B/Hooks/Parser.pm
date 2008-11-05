@@ -3,6 +3,7 @@ use warnings;
 
 package B::Hooks::Parser;
 
+use B::Hooks::OP::Check;
 use parent qw/DynaLoader/;
 
 our $VERSION = '0.04';
@@ -29,7 +30,12 @@ modify code while it's being parsed.
 =head2 setup()
 
 Does some initialization work. This must be called before any other functions
-of this module if you intend to use C<set_linestr>.
+of this module if you intend to use C<set_linestr>. Returns an id that can be
+used to disable the magic using C<teardown>.
+
+=head2 teardown($id)
+
+Disables magic registed using C<setup>.
 
 =head2 get_linestr()
 
@@ -54,7 +60,9 @@ Throws an exception when nothing is being compiled.
 
 The following functions work just like their equivalent in the perl api.
 
-=head2 void hook_parser_setup (void)
+=head2 hook_op_check_id hook_parser_setup (void)
+
+=head2 void hook_parser_teardown (hook_op_check_id id)
 
 =head2 const char *hook_parser_get_linestr (pTHX)
 

@@ -61,9 +61,58 @@ grow_linestr (pTHX_ int idx, SV *sv, int maxlen) {
 	return count;
 }
 
-void
+STATIC OP *
+grow_eval_sv (pTHX) {
+	dSP;
+	SV *sv, **stack;
+
+	if (PL_op->op_private & OPpEVAL_HAS_HH) {
+		stack = &SP[-1];
+	}
+	else {
+		stack = &SP[0];
+	}
+
+	sv = *stack;
+
+	if (SvPOK (sv)) {
+		if (SvREADONLY (sv)) {
+			sv = sv_2mortal (newSVsv (sv));
+		}
+
+		if (!SvLEN (sv) || SvPVX (sv)[SvLEN (sv) - 1] != ';') {
+			if (!SvTEMP (sv)) {
+				sv = sv_2mortal (newSVsv (sv));
+			}
+
+			sv_catpvs (sv, "\n;");
+		}
+
+		SvGROW (sv, 8192);
+	}
+
+	*stack = sv;
+	return PL_ppaddr[OP_ENTEREVAL](aTHX);
+}
+
+STATIC OP *
+check_eval (pTHX_ OP *op, void *user_data) {
+	if (op->op_ppaddr == PL_ppaddr[OP_ENTEREVAL]) {
+		op->op_ppaddr = grow_eval_sv;
+	}
+
+	return op;
+}
+
+hook_op_check_id
 hook_parser_setup () {
 	filter_add (grow_linestr, NULL);
+	return hook_op_check (OP_ENTEREVAL, check_eval, NULL);
+}
+
+void
+hook_parser_teardown (hook_op_check_id id) {
+	hook_op_check_remove (OP_ENTEREVAL, id);
 }
 
 char *
@@ -120,8 +169,12 @@ MODULE = B::Hooks::Parser  PACKAGE = B::Hooks::Parser  PREFIX = hook_parser_
 
 PROTOTYPES: DISABLE
 
-void
+UV
 hook_parser_setup ()
+
+void
+hook_parser_teardown (id)
+	UV id
 
 const char *
 hook_parser_get_linestr ()
