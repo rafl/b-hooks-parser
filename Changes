@@ -1,3 +1,6 @@
+0.05  Wed, 05 Nov 2008 11:35:55 +0100
+  * Grow the line string for string evals ins setup().
+
 0.04  Tue, 04 Nov 2008 21:59:31 +0100
   * Fix bug in clear_lex_stuff, making it actually work.
 
