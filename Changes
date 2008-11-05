@@ -1,3 +1,6 @@
+0.06  Wed, 05 Nov 2008 12:24:33 +0100
+  * Declare all public functions in the header file.
+
 0.05  Wed, 05 Nov 2008 11:35:55 +0100
   * Grow the line string for string evals ins setup().
 
