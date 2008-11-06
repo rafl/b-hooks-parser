@@ -6,7 +6,7 @@ package B::Hooks::Parser;
 use B::Hooks::OP::Check;
 use parent qw/DynaLoader/;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 sub dl_load_flags { 0x01 }
 

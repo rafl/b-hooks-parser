@@ -1,3 +1,6 @@
+0.07  Thu, 06 Nov 2008 01:12:47 +0100
+  * Make string eval line string growing work on < 5.10.0.
+
 0.06  Wed, 05 Nov 2008 12:24:33 +0100
   * Declare all public functions in the header file.
 
