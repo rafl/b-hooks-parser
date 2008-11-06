@@ -10,6 +10,10 @@
 
 #define NOT_PARSING (!PL_parser || !PL_bufptr)
 
+#if PERL_REVISION == 5 && PERL_VERSION >= 10
+#define HAS_HINTS_HASH
+#endif
+
 char *
 hook_parser_get_linestr (pTHX) {
 	if (NOT_PARSING) {
@@ -66,12 +70,16 @@ grow_eval_sv (pTHX) {
 	dSP;
 	SV *sv, **stack;
 
+#ifdef HAS_HINTS_HASH
 	if (PL_op->op_private & OPpEVAL_HAS_HH) {
 		stack = &SP[-1];
 	}
 	else {
 		stack = &SP[0];
 	}
+#else
+	stack = &SP[0];
+#endif
 
 	sv = *stack;
 
