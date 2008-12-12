@@ -1,3 +1,8 @@
+0.08  Fri, 12 Dec 2008 16:36:57 +0100
+  * Add an inject function. This is a small convenience wrapper around
+    get_linestr, get_linestr_offset, substr and set_linestr to inject code at
+    the parsers current position.
+
 0.07  Thu, 06 Nov 2008 01:12:47 +0100
   * Make string eval line string growing work on < 5.10.0.
 
