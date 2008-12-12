@@ -12,6 +12,21 @@ sub dl_load_flags { 0x01 }
 
 __PACKAGE__->bootstrap($VERSION);
 
+sub inject {
+    my ($code) = @_;
+
+    setup();
+
+    my $line   = get_linestr();
+    my $offset = get_linestr_offset();
+
+    substr($line, $offset, 0) = $code;
+
+    set_linestr($line);
+
+    return;
+}
+
 1;
 
 __END__
@@ -55,6 +70,12 @@ Note that perl won't notice any changes in the line string after the position
 returned by C<get_linestr_offset>.
 
 Throws an exception when nothing is being compiled.
+
+=head2 inject($string)
+
+Convenience function to insert a piece of perl code into the current line
+string (as returned by C<get_linestr>) at the current offset (as returned by
+C<get_linestr_offset>).
 
 =head1 C API
 
