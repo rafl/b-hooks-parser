@@ -20,11 +20,8 @@ sub class (&) { }
 
     class {
         BEGIN { on_scope_end {
-            my $linestr = B::Hooks::Parser::get_linestr;
-            my $offset  = B::Hooks::Parser::get_linestr_offset;
-            substr($linestr, $offset, 0) = ';' x 1024;
-            B::Hooks::Parser::set_linestr($linestr);
-        }}
+            B::Hooks::Parser::inject(';' x 1024);
+        } }
     }
 
 pass;
