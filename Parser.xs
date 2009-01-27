@@ -237,3 +237,15 @@ hook_toke_scan_word (offset, handle_package)
 		EXTEND (SP, 2);
 		mPUSHp (tmpbuf, retlen);
 		mPUSHi (retlen);
+
+int
+hook_toke_skipspace (offset)
+		int offset
+	PREINIT:
+		char *base_s, *s;
+	CODE:
+		base_s = SvPVX (PL_linestr) + offset;
+		s = hook_toke_skipspace (aTHX_ base_s);
+		RETVAL = s - base_s;
+	OUTPUT:
+		RETVAL
