@@ -1,3 +1,7 @@
+0.09  Wed, 03 Jun 2009 13:20:21 +0200
+  * Don't redefine various macros if they already exist.
+  * Add B::Hooks::Toke::skipspace function (Liu Kang-min).
+
 0.08  Fri, 12 Dec 2008 16:36:57 +0100
   * Add an inject function. This is a small convenience wrapper around
     get_linestr, get_linestr_offset, substr and set_linestr to inject code at
