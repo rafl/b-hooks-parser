@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 3;
 use Test::Exception;
 
 BEGIN { 
