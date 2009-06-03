@@ -36,10 +36,21 @@ STATIC char *   S_filter_gets(pTHX_ SV *sv, PerlIO *fp, STRLEN append);
 STATIC char*    S_scan_str(pTHX_ char *start, int keep_quoted, int keep_delims);
 STATIC char*    S_scan_word(pTHX_ char *s, char *dest, STRLEN destlen, int allow_package, STRLEN *slp);
 
+#ifndef DPTR2FPTR
 #define DPTR2FPTR(t,p) ((t)PTR2nat(p))  /* data pointer to function pointer */
+#endif
+
+#ifndef FPTR2DPTR
 #define FPTR2DPTR(t,p) ((t)PTR2nat(p))  /* function pointer to data pointer */
+#endif
+
+#ifndef PTR2nat
 #define PTR2nat(p)       (PTRV)(p)       /* pointer to integer of PTRSIZE */
+#endif
+
+#ifndef MEM_WRAP_CHECK_
 #define MEM_WRAP_CHECK_(n,t) MEM_WRAP_CHECK(n,t),
+#endif
 
 /* On MacOS, respect nonbreaking spaces */
 #ifdef MACOS_TRADITIONAL
