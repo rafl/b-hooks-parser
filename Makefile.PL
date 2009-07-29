@@ -28,6 +28,8 @@ makemaker_args(
     dist => { preop => 'pod2text lib/B/Hooks/Parser.pm > README' },
 );
 
+repository 'git://github.com/rafl/b-hooks-parser.git';
+
 extra_tests;
 
 WriteAll;
