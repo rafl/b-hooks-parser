@@ -11,8 +11,9 @@ requires 'B::Hooks::OP::Check';
 test_requires 'Test::Exception';
 test_requires 'B::Hooks::EndOfScope';
 build_requires 'B::Hooks::OP::Check';
-configure_requires 'ExtUtils::Depends';
-configure_requires 'B::Hooks::OP::Check';
+configure_requires 'ExtUtils::Depends' => 0.302; #minimum version that works on Win32+gcc
+configure_requires 'B::Hooks::OP::Check' => '0.18';
+#minimum version that depends on ExtUtils::Depends 0.302
 
 my $pkg = ExtUtils::Depends->new('B::Hooks::Parser', 'B::Hooks::OP::Check');
 $pkg->install('hook_parser.h');
