@@ -1,3 +1,5 @@
+  * Require ExtUtils::Depends 0.302
+
 0.09  Wed, 03 Jun 2009 13:20:21 +0200
   * Don't redefine various macros if they already exist.
   * Add B::Hooks::Toke::skipspace function (Liu Kang-min).
